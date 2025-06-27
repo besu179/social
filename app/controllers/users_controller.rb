@@ -3,8 +3,13 @@ class UsersController < ApplicationController
     @user = User.new
   end
   def show
-    User.find(params[:id])
+    @user = User.find_by(id: params[:id])
+    if @user.nil?
+      flash[:alert] = "User not found"
+      redirect_to root_path
+    end
   end
+
   def create
     @user = User.new(user_params)
     if @user.save
