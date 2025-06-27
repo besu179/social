@@ -29,16 +29,19 @@
           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
             <li><%= link_to "Sign up", signup_path, class: "dropdown-item" %></li>
             <% if logged_in? %>
-              <%= link_to "Log out", logout_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
+               <%= button_to "Log out", logout_path, method: :delete, class: "dropdown-item", form: { class: "d-inline" } %>
               <% else %>
               <%= link_to "Log in", login_path, class: "dropdown-item" %>
             <% end %>
 
-            <li><%= link_to "Microposts", "#", class: "dropdown-item" %></li>
+             <li><%= link_to "Microposts", "#", class: "dropdown-item", data: { turbo_frame: "_top" } %></li>
             <li><%= link_to "Users List", "#", class: "dropdown-item" %></li>
             <li><hr class="dropdown-divider"></li>
-            <li><%= link_to "Settings", "#", class: "dropdown-item" %></li>
-            <li><%= link_to "Privacy Policy", "#", class: "dropdown-item" %></li>
+            <li><%= link_to "Privacy Policy", privacy_path, class: "dropdown-item" %></li>
+
+            <% if logged_in? %>
+                <li><%= link_to "Settings", settings_path, class: "dropdown-item" %></li>
+            <% end %>
           </ul>
         </li>
       </ul>

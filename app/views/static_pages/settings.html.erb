@@ -1,0 +1,40 @@
+<% provide(:title, @title) %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h1><%= @title %></h1>
+      
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Account Settings</h5>
+          <p>Manage your account preferences and settings here.</p>
+          
+          <div class="mt-4">
+            <h6>Profile</h6>
+            <ul class="list-unstyled">
+              <li><%= link_to "Edit Profile", edit_user_path(current_user) %></li>
+              <li><%= link_to "Change Password", '#' %></li>
+            </ul>
+          </div>
+
+          <div class="mt-4">
+            <h6>Security</h6>
+            <ul class="list-unstyled">
+              <li><%= link_to "Change Password", '#' %></li>
+              <li><%= link_to "Two-Factor Authentication", '#' %></li>
+            </ul>
+          </div>
+
+          <div class="mt-4">
+            <h6>Notifications</h6>
+            <ul class="list-unstyled">
+              <li><%= link_to "Email Notifications", '#' %></li>
+              <li><%= link_to "Push Notifications", '#' %></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

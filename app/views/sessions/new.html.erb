@@ -1,9 +1,15 @@
 <% provide(:title, "Log in") %>
 
 <div class="container">
-  <h1>Log in</h1>
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h1>Log in</h1>
+      
+      <% if flash[:danger] %>
+        <div class="alert alert-danger"><%= flash[:danger] %></div>
+      <% end %>
 
-  <%= form_with(scope: :session, url: login_path, local: true) do |f| %>
+      <%= form_with(scope: :session, url: login_path, local: true) do |f| %>
     <div class="mb-3">
       <%= f.label :email %>
       <%= f.email_field :email, class: "form-control" %>
@@ -21,4 +27,6 @@
 
     <%= f.submit "Log in", class: "btn btn-primary" %>
   <% end %>
+</div>
+</div>
 </div>

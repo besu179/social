@@ -10,4 +10,12 @@ class StaticPagesController < ApplicationController
 
   def contact
   end
+
+  def settings
+    @title = "Settings"
+  end
+
+  def privacy
+    @title = "Privacy Policy"
+  end
 end
