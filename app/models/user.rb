@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   before_save { self.email = email.downcase }
 
-  attr_accessor :remember_token
+  attr_accessor :remember_token, :password_confirmation
   has_secure_password
 
   validates :name, presence: true, length: { maximum: 50 }
@@ -10,7 +10,8 @@ class User < ApplicationRecord
                     format: { with: URI::MailTo::EMAIL_REGEXP },
                     uniqueness: { case_sensitive: false }
 
-  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  validates :password, presence: true, length: { minimum: 6 }
+  validates :password_confirmation, presence: true, if: -> { new_record? || password.present? }
 
   # Returns the hash digest of the given string.
   def User.digest(string)

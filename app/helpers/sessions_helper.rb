@@ -1,7 +1,6 @@
 module SessionsHelper
   def log_in(user)
     session[:user_id] = user.id
-    # Remember me if requested
     user.remember
     cookies.permanent.signed[:user_id] = user.id
     cookies.permanent[:remember_token] = user.remember_token
