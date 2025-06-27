@@ -1,0 +1,21 @@
+<% provide(:title, "Sign up") %>
+
+<div class="container">
+  <h1>Sign up</h1>
+
+  <%= form_with(model: @user, local: true) do |f| %>
+    <div class="mb-3">
+      <%= f.label :name %>
+      <%= f.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :email %>
+      <%= f.email_field :email, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.submit "Create my account", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
