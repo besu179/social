@@ -29,8 +29,8 @@
           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
             <li><%= link_to "Sign up", signup_path, class: "dropdown-item" %></li>
             <% if logged_in? %>
-              <%= link_to "Log out", logout_path, method: :delete, class: "dropdown-item" %>
-            <% else %>
+              <%= link_to "Log out", logout_path, method: :delete, data: { turbo_method: :delete }, class: "dropdown-item" %>
+              <% else %>
               <%= link_to "Log in", login_path, class: "dropdown-item" %>
             <% end %>
 
