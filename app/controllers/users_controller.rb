@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      flash[:notice] = "wellcome to the sample app"
+      flash[:notice] = "wellcome to the social app"
       redirect_to @user
     else
       render "new", status: :unprocessable_entity
