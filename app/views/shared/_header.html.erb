@@ -26,10 +26,11 @@
             More
           </a>
           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
-            <li><%= link_to "Sign up", signup_path, class: "dropdown-item" %></li>
             <% if logged_in? %>
-               <%= button_to "Log out", logout_path, method: :delete, class: "dropdown-item", form: { class: "d-inline" } %>
-              <% else %>
+              <li><%= link_to "My Profile", current_user, class: "dropdown-item" %></li>
+              <%= button_to "Log out", logout_path, method: :delete, class: "dropdown-item", form: { class: "d-inline" } %>
+            <% else %>
+              <%= link_to "Sign up", signup_path, class: "dropdown-item" %>
               <%= link_to "Log in", login_path, class: "dropdown-item" %>
             <% end %>
 

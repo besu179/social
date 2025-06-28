@@ -26,6 +26,13 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    flash[:success] = "Account deleted"
+    redirect_to root_url
+  end
+
   def create
     @user = User.new(user_params)
     if @user.save
