@@ -10,7 +10,7 @@ class User < ApplicationRecord
                     format: { with: URI::MailTo::EMAIL_REGEXP },
                     uniqueness: { case_sensitive: false }
 
-  validates :password, presence: true, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 }, if: -> { new_record? || password.present? }
   validates :password_confirmation, presence: true, if: -> { new_record? || password.present? }
 
   # Returns the hash digest of the given string.
