@@ -39,7 +39,8 @@
             <li><%= link_to "Privacy Policy", privacy_path, class: "dropdown-item" %></li>
 
             <% if logged_in? %>
-                <li><%= link_to "Settings", settings_path, class: "dropdown-item" %></li>
+                <li><%= link_to "Edit Profile", edit_user_path(current_user), class: "dropdown-item" %></li>
+              <li><%= link_to "Settings", settings_path, class: "dropdown-item" %></li>
             <% end %>
           </ul>
         </li>
