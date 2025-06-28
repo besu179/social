@@ -46,12 +46,12 @@ class User < ApplicationRecord
 
   # Sends activation email.
   def send_activation_email
-    UserMailer.account_activation(self).deliver_now
+    UserMailer.with(user: self).account_activation.deliver_now
   end
 
   # Sends password reset email.
   def send_password_reset_email
-    UserMailer.password_reset(self).deliver_now
+    UserMailer.with(user: self).password_reset.deliver_now
   end
 
   # Returns true if a password reset has expired.
@@ -85,16 +85,5 @@ class User < ApplicationRecord
   def forget_reset
     update_attribute(:reset_token, nil)
     update_attribute(:reset_sent_at, nil)
-  end
-
-  # Returns true if the given token matches the digest.
-  def authenticated?(remember_token)
-    return false if remember_digest.nil?
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
-  end
-
-  # Forgets a user.
-  def forget
-    update_attribute(:remember_digest, nil)
   end
 end
