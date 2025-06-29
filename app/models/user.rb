@@ -12,6 +12,7 @@ class User < ApplicationRecord
 
   validates :password, presence: true, length: { minimum: 6 }, if: -> { new_record? || password.present? }
   validates :password_confirmation, presence: true, if: -> { new_record? || password.present? }
+  validates :activated_at, presence: true, if: :activated?
 
   # Returns the hash digest of the given string.
   def User.digest(string)
@@ -69,6 +70,11 @@ class User < ApplicationRecord
     digest = send("#{attribute}_digest")
     return false if digest.nil?
     BCrypt::Password.new(digest).is_password?(token)
+  end
+
+  # Returns true if the user has been activated.
+  def activated?
+    activated_at.present?
   end
 
   # Forgets a user.
