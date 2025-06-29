@@ -1,0 +1,24 @@
+<% provide(:title, @title) %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h1><%= @title %></h1>
+      
+      <%= render 'shared/messages' %>
+
+      <div class="card">
+        <div class="card-body">
+          <% if @users.any? %>
+            <ol class="list-unstyled">
+              <%= render @users %>
+            </ol>
+            <%= will_paginate @users %>
+          <% else %>
+            <p>No <%= @title.downcase %> yet.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

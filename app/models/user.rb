@@ -12,6 +12,17 @@ class User < ApplicationRecord
 
   validates :password, presence: true, length: { minimum: 6 }, if: -> { new_record? || password.present? }
   validates :password_confirmation, presence: true, if: -> { new_record? || password.present? }
+  validates :activated_at, presence: true, if: :activated?
+
+  has_many :microposts, dependent: :destroy
+  has_many :active_relationships, class_name:  "Relationship",
+                                  foreign_key: "follower_id",
+                                  dependent:   :destroy
+  has_many :passive_relationships, class_name:  "Relationship",
+                                 foreign_key: "followed_id",
+                                 dependent:   :destroy
+  has_many :following, through: :active_relationships, source: :followed
+  has_many :followers, through: :passive_relationships, source: :follower
 
   # Returns the hash digest of the given string.
   def User.digest(string)
@@ -35,6 +46,7 @@ class User < ApplicationRecord
   def create_activation_digest
     self.activation_token = User.new_token
     self.activation_digest = User.digest(activation_token)
+    save
   end
 
   # Creates and assigns the password reset token and digest.
@@ -42,16 +54,19 @@ class User < ApplicationRecord
     self.reset_token = User.new_token
     self.reset_digest = User.digest(reset_token)
     self.reset_sent_at = Time.zone.now
+    save
   end
 
   # Sends activation email.
   def send_activation_email
     UserMailer.with(user: self).account_activation.deliver_now
+    save
   end
 
   # Sends password reset email.
   def send_password_reset_email
     UserMailer.with(user: self).password_reset.deliver_now
+    save
   end
 
   # Returns true if a password reset has expired.
@@ -85,5 +100,30 @@ class User < ApplicationRecord
   def forget_reset
     update_attribute(:reset_token, nil)
     update_attribute(:reset_sent_at, nil)
+  end
+
+  # Returns true if the user has been activated.
+  def activated?
+    activated_at.present?
+  end
+
+  # Returns a user's status feed.
+  def feed
+    Micropost.from_users_followed_by(self)
+  end
+
+  # Follows a user.
+  def follow(other_user)
+    following << other_user
+  end
+
+  # Unfollows a user.
+  def unfollow(other_user)
+    following.delete(other_user)
+  end
+
+  # Returns true if the current user is following the other user.
+  def following?(other_user)
+    following.include?(other_user)
   end
 end

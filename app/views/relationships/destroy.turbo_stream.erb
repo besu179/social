@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "follow_form_#{@user.id}" do %>
+  <%= render "users/follow_form", user: @user %>
+<% end %>
+
+<%= turbo_stream.remove "follower_#{@user.id}" %>

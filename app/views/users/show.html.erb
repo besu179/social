@@ -1,23 +1,64 @@
 <% provide(:title, @user.name) %>
 
-<div class="container py-5">
+<div class="container">
   <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <div class="card">
+    <div class="col-md-8 offset-md-2">
+      <h1><%= @user.name %></h1>
+      
+      <%= render 'shared/messages' %>
+
+      <div class="card mb-3">
         <div class="card-body">
-          <h1 class="card-title"><%= @user.name %></h1>
-          <p class="card-text">
-            <strong>Email:</strong> <%= @user.email %>
-          </p>
-          <% if logged_in? && current_user?(@user) %>
+          <p><strong>Email:</strong> <%= @user.email %></p>
+          
+          <% if current_user?(@user) %>
             <div class="mt-3">
-              <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-primary me-2" %>
-              <%= button_to "Delete account", @user, method: :delete, 
-                data: { confirm: "Are you sure you want to delete your account?" },
-                class: "btn btn-danger", form: { class: "d-inline" } %>
+              <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-primary" %>
+              <%= link_to "Delete account", @user, method: :delete, data: { "turbo-method": :delete, "turbo-confirm": "Delete account?" }, class: "btn btn-danger ms-2" %>
+            </div>
+          <% else %>
+            <div class="mt-3">
+              <%= render 'users/follow_form', user: @user %>
             </div>
           <% end %>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <h3>Microposts</h3>
+          <div class="card">
+            <div class="card-body">
+              <%= @user.microposts.count %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <h3>Following</h3>
+          <div class="card">
+            <div class="card-body">
+              <%= @user.following.count %>
+              <%= link_to "All", following_user_path(@user), class: "btn btn-sm btn-primary" %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <h3>Followers</h3>
+          <div class="card">
+            <div class="card-body">
+              <%= @user.followers.count %>
+              <%= link_to "All", followers_user_path(@user), class: "btn btn-sm btn-primary" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h3>Microposts (<%= @user.microposts.count %>)</h3>
+        <%= render @microposts %>
+        <%= will_paginate @microposts %>
       </div>
     </div>
   </div>

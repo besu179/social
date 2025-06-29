@@ -1,13 +1,39 @@
 <% provide(:title, "Home") %>
 
-<div class="container py-5 text-center">
-  <h1 class="display-3">Welcome to a Sample Social App</h1>
-  <p class="lead">
-    This is a learning-based Ruby on Rails project inspired by Michael Hartl’s tutorial.
-  </p>
-  <p>
-    It features user authentication, posts, and social features — all built step-by-step using clean MVC design and modern web practices.
-  </p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h1>Home</h1>
+      
+      <%= render 'shared/messages' %>
 
-  <a class="btn btn-primary btn-lg mt-3" href="<%= about_path %>">Learn more about the developer</a>
+      <% if logged_in? %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <%= form_with(model: @micropost, local: true) do |f| %>
+              <%= render 'shared/error_messages', object: f.object %>
+              <div class="form-group">
+                <%= f.text_area :content, placeholder: "Compose new micropost...",
+                               class: "form-control", rows: 2 %>
+              </div>
+              <%= f.submit "Post", class: "btn btn-primary" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Welcome to the Social Sample App</h5>
+          <p class="card-text">This is a sample application for learning Ruby on Rails.</p>
+        </div>
+      </div>
+
+      <% if logged_in? %>
+        <h2>Your Microposts</h2>
+        <%= render @feed_items %>
+        <%= will_paginate @feed_items %>
+      <% end %>
+    </div>
+  </div>
 </div>
