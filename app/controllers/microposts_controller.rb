@@ -8,15 +8,28 @@ class MicropostsController < ApplicationController
       flash[:success] = "Micropost created!"
       redirect_to root_url
     else
+      flash.now[:danger] = "Micropost could not be created: #{@micropost.errors.full_messages.join(', ')}"
       @feed_items = current_user.feed.paginate(page: params[:page])
-      render 'static_pages/home'
+      render 'static_pages/home', status: :unprocessable_entity
     end
   end
 
   def destroy
-    @micropost.destroy
-    flash[:success] = "Micropost deleted"
-    redirect_to request.referer || root_url
+    @micropost = current_user.microposts.find_by(id: params[:id])
+    if @micropost
+      @micropost.destroy
+      flash[:success] = "Micropost deleted"
+      redirect_to request.referer || root_url
+    else
+      flash[:danger] = "Micropost not found"
+      redirect_to root_url
+    end
+  rescue ActiveRecord::RecordNotFound
+    flash[:danger] = "Micropost not found"
+    redirect_to root_url
+  rescue ActiveRecord::RecordInvalid => e
+    flash[:danger] = e.message
+    redirect_to root_url
   end
 
   private

@@ -24,15 +24,28 @@ class User < ApplicationRecord
   has_many :following, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
 
+  # Prevents users from following themselves
+  validate :cannot_follow_self
+
+  private
+
+  def downcase_email
+    email.downcase! if email.present?
+  end
+
+  def cannot_follow_self
+    errors.add(:base, "Cannot follow yourself") if following.include?(self)
+  end
+
   # Returns the hash digest of the given string.
-  def User.digest(string)
+  def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
                                           BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
   end
 
   # Returns a random token.
-  def User.new_token
+  def self.new_token
     SecureRandom.urlsafe_base64
   end
 
@@ -44,15 +57,15 @@ class User < ApplicationRecord
 
   # Creates and assigns the activation token and digest.
   def create_activation_digest
-    self.activation_token = User.new_token
-    self.activation_digest = User.digest(activation_token)
+    self.activation_token = self.class.new_token
+    self.activation_digest = self.class.digest(activation_token)
     save
   end
 
   # Creates and assigns the password reset token and digest.
   def create_reset_digest
-    self.reset_token = User.new_token
-    self.reset_digest = User.digest(reset_token)
+    self.reset_token = self.class.new_token
+    self.reset_digest = self.class.digest(reset_token)
     self.reset_sent_at = Time.zone.now
     save
   end
@@ -77,6 +90,7 @@ class User < ApplicationRecord
   # Activates an account.
   def activate
     update_columns(activated: true, activated_at: Time.zone.now)
+    forget_activation
   end
 
   # Returns true if the given token matches the digest.
@@ -99,12 +113,11 @@ class User < ApplicationRecord
   # Forgets password reset token.
   def forget_reset
     update_attribute(:reset_token, nil)
-    update_attribute(:reset_sent_at, nil)
   end
 
   # Returns true if the user has been activated.
   def activated?
-    activated_at.present?
+    !activated_at.nil?
   end
 
   # Returns a user's status feed.
