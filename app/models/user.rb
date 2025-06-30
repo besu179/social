@@ -73,13 +73,11 @@ class User < ApplicationRecord
   # Sends activation email.
   def send_activation_email
     UserMailer.with(user: self).account_activation.deliver_now
-    save
   end
 
   # Sends password reset email.
   def send_password_reset_email
     UserMailer.with(user: self).password_reset.deliver_now
-    save
   end
 
   # Returns true if a password reset has expired.
